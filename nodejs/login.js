@@ -19,6 +19,7 @@ async function getInput() {
     });
 }
 
+// ---- LOGIN ----
 async function main() {
     const mercariUrl = "https://jp.mercari.com/";
     const browser = await puppeteer.launch({
