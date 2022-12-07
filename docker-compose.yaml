@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+  crawler:
+    build: ./crawler
+    ports:
+      - 8080:80
+    links:
+      - "redis"
+  controller:
+    build: ./controller
+    ports:
+      - 8081:3333
+    links:
+      - "redis"
