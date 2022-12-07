@@ -1,0 +1,8 @@
+{
+	"status": "running",
+	"minPrice": 1000,
+	"maxPrice": 2000,
+	"searchWord": "パーカー",
+	"excludeWords": [],
+	"autoBuy": false
+}
