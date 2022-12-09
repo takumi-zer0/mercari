@@ -2,7 +2,7 @@
 	"status": "running",
 	"minPrice": 1000,
 	"maxPrice": 2000,
-	"searchWord": "パーカー 黄色",
+	"searchWord": "パーカー",
 	"excludeWords": [],
-	"autoBuy": true
+	"autoBuy": false
 }

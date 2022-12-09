@@ -5,15 +5,24 @@ services:
     image: "redis:latest"
     ports:
       - "6379:6379"
+    networks:
+      - back
   crawler:
     build: ./crawler
-    ports:
-      - 8080:80
-    links:
-      - "redis"
+    depends_on:
+      - redis
+      - controller
+    networks:
+      - back
   controller:
     build: ./controller
-    ports:
-      - 8081:3333
-    links:
-      - "redis"
+    depends_on:
+      - redis
+    networks:
+      - back
+networks:
+  back:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.11.0/24"

@@ -3,7 +3,7 @@ const fs = require("fs");
 const redis = require("redis");
 
 async function initRedisPubSub() {
-	const client = redis.createClient({ url: "redis://localhost:6379" });
+	const client = redis.createClient({ url: "redis://192.168.11.2:6379" });
 
 	global.subscriber = client.duplicate();
 	global.publisher = client.duplicate();
@@ -22,11 +22,17 @@ async function runScraper() {
 	});
 
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: true,
 		defaultViewport: null,
-		args: ["--start-maximized"],
+		executablePath: "/usr/bin/google-chrome",
+		args: ["--no-sandbox", "--disable-setuid-sandbox"],
 	});
 	const page = await browser.newPage();
+	await page.setViewport({
+		width: 1920,
+		height: 1080,
+		deviceScaleFactor: 1,
+	});
 
 	setInterval(async () => {
 		// read settings.json
