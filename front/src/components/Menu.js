@@ -1,7 +1,7 @@
 function Menu({ status, currentMenu, setCurrentMenu }) {
 	return (
 		<div className="w-[20vw] bg-blue-800 px-5 py-5 flex flex-col gap-5">
-			{status == "online" ? (
+			{status.online == true ? (
 				<div className="text-green-500 font-bold text-xl tracking-wider pb-5 border-b">
 					🟢 稼働中
 				</div>

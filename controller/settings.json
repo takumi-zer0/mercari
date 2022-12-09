@@ -1,8 +1,1 @@
-{
-	"status": "running",
-	"minPrice": 1000,
-	"maxPrice": 2000,
-	"searchWord": "パーカー",
-	"excludeWords": [],
-	"autoBuy": false
-}
+{"searchWord":"シューズ","minPrice":"1000","maxPrice":"5000","include":[],"exclude":[],"autoBuy":true}

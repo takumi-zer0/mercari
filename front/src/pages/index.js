@@ -3,13 +3,29 @@ import Account from "../components/Account";
 import Menu from "../components/Menu";
 import List from "../components/List";
 import Search from "../components/Search";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import axios from "axios";
 
 export default function Home() {
 	const [currentMenu, setCurrentMenu] = useState("search");
 	const [status, setStatus] = useState("online");
+
+	useEffect(() => {
+		setInterval(() => {
+			axios.get("api/getStatus").then((res) => {
+				console.log("getStatus", res.data);
+				setStatus(res.data);
+				if (res.data.needsPhoneAuth2) {
+					let prompt = window.prompt("Enter phone auth code");
+					axios.post("http://192.168.11.3:3333/phoneAuth2", {
+						phoneAuth2: prompt,
+					});
+				}
+			});
+		}, 2000);
+	}, []);
 
 	return (
 		<div className="">
@@ -21,7 +37,7 @@ export default function Home() {
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<div className="flex  min-h-screen">
+			<div className="flex min-h-screen">
 				<Menu
 					status={status}
 					currentMenu={currentMenu}

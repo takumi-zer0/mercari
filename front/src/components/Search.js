@@ -1,19 +1,59 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function Search(props) {
 	const [searchData, setSearchData] = useState({
-		search: "",
+		searchWord: "",
+		include: [],
 		exclude: [],
+		include: [],
 		minPrice: "",
 		maxPrice: "",
-		enableAutoBuy: false,
+		autoBuy: false,
 	});
 
 	const [excludeTemp, setExcludeTemp] = useState("");
+	const [includeTemp, setIncludeTemp] = useState("");
+
+	useEffect(() => {
+		// separate excludeTemp by ,
+		let temp = excludeTemp.split(",");
+		// remove empty strings
+		temp = temp.filter((item) => item != "");
+		temp = temp.map((item) => item.trim());
+
+		console.log(temp, "temot");
+
+		// separate includeTemp by ,
+		let temp2 = includeTemp.split(",");
+		// remove empty strings
+		temp2 = temp2.filter((item) => item != "");
+		// remove spaces
+		temp2 = temp2.map((item) => item.trim());
+		setSearchData({
+			...searchData,
+			include: temp2 || [],
+			exclude: temp || [],
+		});
+	}, [excludeTemp, includeTemp]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log(searchData);
+
+		let send = {
+			searchWord: searchData.searchWord,
+			minPrice: searchData.minPrice || 0,
+			maxPrice: searchData.maxPrice || 1000000,
+			include: searchData.include || [],
+			exclude: searchData.exclude || [],
+			autoBuy: searchData.autoBuy,
+		};
+
+		axios.post("/api/settings", send).then((res) => {
+			console.log(res);
+			alert("OK");
+		});
 	};
 
 	return (
@@ -26,23 +66,34 @@ function Search(props) {
 				onSubmit={(e) => {
 					handleSubmit(e);
 				}}
-				className="flex flex-col gap-2 m-2"
+				className="flex flex-col m-2 gap-2"
 			>
-				<div className="flex gap-2 items-center">
+				<div className="flex items-center gap-2">
 					<h2 className="w-44">検索商品名</h2>
 					<input
 						type="text"
-						value={searchData.search}
+						value={searchData.searchWord}
 						onChange={(e) => {
 							setSearchData({
 								...searchData,
-								search: e.target.value,
+								searchWord: e.target.value,
 							});
 						}}
-						className="w-full rounded-md h-14 flex justify-between px-2 items-center"
+						className="flex items-center justify-between w-full px-2 rounded-md h-14"
 					/>
 				</div>
-				<div className="flex gap-2 items-center">
+				<div className="flex items-center gap-2">
+					<h2 className="w-44">抽出キーワード</h2>
+					<input
+						type="text"
+						value={includeTemp}
+						onChange={(e) => {
+							setIncludeTemp(e.target.value);
+						}}
+						className="flex items-center justify-between w-full px-2 rounded-md h-14"
+					/>
+				</div>
+				<div className="flex items-center gap-2">
 					<h2 className="w-44">除外キーワード</h2>
 					<input
 						type="text"
@@ -50,13 +101,13 @@ function Search(props) {
 						onChange={(e) => {
 							setExcludeTemp(e.target.value);
 						}}
-						className="w-full rounded-md h-14 flex justify-between px-2 items-center"
+						className="flex items-center justify-between w-full px-2 rounded-md h-14"
 					/>
 				</div>
-				<div className="flex gap-2 items-start">
-					<h2 className="w-44 pt-4">金額</h2>
-					<div className="flex flex-col gap-4 w-full">
-						<div className="flex gap-2 items-center">
+				<div className="flex items-start gap-2">
+					<h2 className="pt-4 w-44">金額</h2>
+					<div className="flex flex-col w-full gap-4">
+						<div className="flex items-center gap-2">
 							<input
 								type="number"
 								value={searchData.minPrice}
@@ -66,11 +117,11 @@ function Search(props) {
 										minPrice: e.target.value,
 									});
 								}}
-								className="w-44 rounded-md h-14 flex justify-between px-2 items-center"
+								className="flex items-center justify-between px-2 w-44 rounded-md h-14"
 							/>
 							<p>円以上</p>
 						</div>
-						<div className="flex gap-2 items-center">
+						<div className="flex items-center gap-2">
 							<input
 								type="number"
 								value={searchData.maxPrice}
@@ -80,36 +131,36 @@ function Search(props) {
 										maxPrice: e.target.value,
 									});
 								}}
-								className="w-44 rounded-md h-14 flex justify-between px-2 items-center"
+								className="flex items-center justify-between px-2 w-44 rounded-md h-14"
 							/>
 							<p>円未満</p>
 						</div>
 					</div>
 				</div>
-				<div className="flex gap-2 items-center">
+				<div className="flex items-center gap-2">
 					<h2 className="w-44">自動購入</h2>
 					<input
 						type="checkbox"
-						checked={searchData.enableAutoBuy}
+						checked={searchData.autoBuy}
 						onChange={(e) => {
 							setSearchData({
 								...searchData,
-								enableAutoBuy: e.target.checked,
+								autoBuy: e.target.checked,
 							});
 						}}
-						className="w-5 rounded-md h-14 flex justify-between px-2 items-center"
+						className="flex items-center justify-between w-5 px-2 rounded-md h-14"
 					/>
 				</div>
-				<div className="w-full items-center justify-center gap-4 flex">
+				<div className="flex items-center justify-center w-full gap-4">
 					<button
 						type="submit"
-						className="bg-red-500 text-white rounded-md h-14 flex justify-center items-center w-44 hover:bg-red-800"
+						className="flex items-center justify-center text-white bg-red-500 rounded-md h-14 w-44 hover:bg-red-800"
 					>
 						停止
 					</button>
 					<button
 						type="submit"
-						className="bg-blue-500 text-white rounded-md h-14 flex justify-center items-center w-44 hover:bg-blue-800"
+						className="flex items-center justify-center text-white bg-blue-500 rounded-md h-14 w-44 hover:bg-blue-800"
 					>
 						稼働
 					</button>

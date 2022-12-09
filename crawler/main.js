@@ -17,7 +17,7 @@ async function initRedisPubSub() {
 async function runScraper() {
 	await initRedisPubSub();
 	subscriber.subscribe("settings", (msg) => {
-		console.log("msg", msg);
+		console.log("subscribe settings", msg);
 		global.settings = JSON.parse(msg);
 	});
 
@@ -36,6 +36,10 @@ async function runScraper() {
 
 	setInterval(async () => {
 		// read settings.json
+		console.log("settings from interval", settings);
+		if (settings.searchWord == "") {
+			return;
+		}
 
 		await page.goto(
 			`https://jp.mercari.com/search?keyword=${settings.searchWord}&order=desc&sort=created_time`
@@ -64,15 +68,31 @@ async function runScraper() {
 		);
 		console.log(groups);
 
-		const filteredGroups = groups.filter(
+		let filteredGroups = groups.filter(
 			(e) =>
-				e.price >= settings.minPrice &&
-				e.price <= settings.maxPrice &&
-				!settings.excludeWords.some((word) => e.name.includes(word))
+				Number(e.price) >= Number(settings.minPrice) &&
+				Number(e.price) <= Number(settings.maxPrice)
 		);
+
+		if (settings.include.length > 0) {
+			filteredGroups = filteredGroups.filter((e) =>
+				settings.include.includes(e.name)
+			);
+		}
+
+		if (settings.exclude.length > 0) {
+			filteredGroups = filteredGroups.filter(
+				(e) => !settings.exclude.includes(e.name)
+			);
+		}
+
 		console.log(filteredGroups);
 		publisher.publish("merList", JSON.stringify({ list: filteredGroups }));
-		if (settings.autoBuy === true) {
+		if (
+			(settings.autoBuy == "true" || settings.autoBuy == true) &&
+			filteredGroups.length > 1
+		) {
+			console.log("AUTO BUY");
 			let buyItem = filteredGroups[0]["id"];
 			publisher.publish("buy", JSON.stringify({ id: buyItem }));
 		}

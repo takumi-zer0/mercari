@@ -1,14 +1,24 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function Account(props) {
 	const [accountData, setAccountData] = useState({
 		email: "",
 		password: "",
-		secondPassword: "",
 	});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		axios
+			.post("http://192.168.11.3:3333/login", accountData)
+			.then((res) => {
+				console.log(res, "login");
+			});
+
+		let phoneAuth1 = window.prompt("Enter your password");
+		axios.post("http://192.168.11.3:3333/phoneAuth1", {
+			phoneAuth1: phoneAuth1,
+		});
 	};
 
 	return (
@@ -21,9 +31,9 @@ function Account(props) {
 				onSubmit={(e) => {
 					handleSubmit(e);
 				}}
-				className="flex flex-col gap-2 m-2"
+				className="flex flex-col m-2 gap-2"
 			>
-				<div className="flex gap-2 items-center">
+				<div className="flex items-center gap-2">
 					<h2 className="w-44">メールアドレス</h2>
 					<input
 						type="text"
@@ -34,10 +44,10 @@ function Account(props) {
 								email: e.target.value,
 							});
 						}}
-						className="w-full rounded-md h-14 flex justify-between px-2 items-center"
+						className="flex items-center justify-between w-full px-2 rounded-md h-14"
 					/>
 				</div>
-				<div className="flex gap-2 items-center">
+				<div className="flex items-center gap-2">
 					<h2 className="w-44">パスワード</h2>
 					<input
 						type="password"
@@ -48,26 +58,12 @@ function Account(props) {
 								password: e.target.value,
 							});
 						}}
-						className="w-full rounded-md h-14 flex justify-between px-2 items-center"
-					/>
-				</div>
-				<div className="flex gap-2 items-center">
-					<h2 className="w-44">第二認証</h2>
-					<input
-						type="password"
-						value={accountData.secondPassword}
-						onChange={(e) => {
-							setAccountData({
-								...accountData,
-								secondPassword: e.target.value,
-							});
-						}}
-						className="w-full rounded-md h-14 flex justify-between px-2 items-center"
+						className="flex items-center justify-between w-full px-2 rounded-md h-14"
 					/>
 				</div>
 				<button
 					type="submit"
-					className="bg-blue-500 text-white rounded-md h-14 flex justify-center items-center"
+					className="flex items-center justify-center text-white bg-blue-500 rounded-md h-14"
 				>
 					保存
 				</button>

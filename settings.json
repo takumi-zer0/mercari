@@ -1,0 +1,10 @@
+{
+	"settings": {
+		"searchWord": "パーカー　EP",
+		"include": ["102", "321", "111"],
+		"exclude": ["32", "320", "000"],
+		"minPrice": "1000",
+		"maxPrice": "2000",
+		"autoBuy": "false"
+	}
+}
