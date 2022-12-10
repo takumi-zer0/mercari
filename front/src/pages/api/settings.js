@@ -5,7 +5,7 @@ export default function handler(req, res) {
 	console.log("api/setitngs", settings);
 
 	axios
-		.post("http://192.168.11.3:3333/updateStatus", {
+		.post(`http://${process.env.IP}/updateStatus`, {
 			settings: settings,
 		})
 		.then((res) => {

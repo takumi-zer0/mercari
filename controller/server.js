@@ -26,7 +26,6 @@ async function initRedisPubSub() {
 	await publisher.connect();
 	console.log("Redis connected");
 	subscriber.subscribe("merList", (msg) => {
-		console.log("msg", msg);
 		let list = JSON.parse(msg);
 		// append to merList only if not already present
 		list["list"].forEach((mer) => {
@@ -43,7 +42,6 @@ async function initRedisPubSub() {
 			if (err) throw err;
 			let settings = JSON.parse(data);
 			publisher.publish("settings", JSON.stringify(settings));
-			console.log("merList", merList);
 			console.log("settings", settings);
 		});
 	}, 1000);
@@ -58,7 +56,6 @@ async function initRedisPubSub() {
  */
 
 app.get("/getStatus", (req, res) => {
-	console.log("incoming");
 	let status = fs.readFileSync("status.json");
 	status = JSON.parse(status);
 
@@ -67,7 +64,6 @@ app.get("/getStatus", (req, res) => {
 
 app.post("/updateStatus", (req, res) => {
 	let settings = req.body.settings;
-	console.log("update status", settings);
 	settings = {
 		searchWord: settings.searchWord || "",
 		minPrice: settings.minPrice || 0,

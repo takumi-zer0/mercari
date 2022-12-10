@@ -17,7 +17,6 @@ async function initRedisPubSub() {
 async function runScraper() {
 	await initRedisPubSub();
 	subscriber.subscribe("settings", (msg) => {
-		console.log("subscribe settings", msg);
 		global.settings = JSON.parse(msg);
 	});
 
@@ -36,7 +35,6 @@ async function runScraper() {
 
 	setInterval(async () => {
 		// read settings.json
-		console.log("settings from interval", settings);
 		if (settings.searchWord == "") {
 			return;
 		}
@@ -52,7 +50,6 @@ async function runScraper() {
 			Array.from(
 				document.getElementsByTagName("mer-item-thumbnail"),
 				(e) => {
-					console.log(e);
 					// get parent href
 					const parent = e.parentElement;
 					const href = parent.href;
@@ -66,7 +63,8 @@ async function runScraper() {
 				}
 			)
 		);
-		console.log(groups);
+
+		console.log("groups", groups[0], groups[1]);
 
 		let filteredGroups = groups.filter(
 			(e) =>
@@ -86,7 +84,6 @@ async function runScraper() {
 			);
 		}
 
-		console.log(filteredGroups);
 		publisher.publish("merList", JSON.stringify({ list: filteredGroups }));
 		if (
 			(settings.autoBuy == "true" || settings.autoBuy == true) &&

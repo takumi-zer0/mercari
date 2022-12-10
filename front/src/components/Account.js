@@ -10,13 +10,13 @@ function Account(props) {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		axios
-			.post("http://192.168.11.3:3333/login", accountData)
+			.post(`http://${process.env.IP}/login`, accountData)
 			.then((res) => {
 				console.log(res, "login");
 			});
 
 		let phoneAuth1 = window.prompt("Enter your password");
-		axios.post("http://192.168.11.3:3333/phoneAuth1", {
+		axios.post(`http://${process.env.IP}/phoneAuth1`, {
 			phoneAuth1: phoneAuth1,
 		});
 	};

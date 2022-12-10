@@ -19,7 +19,7 @@ export default function Home() {
 				setStatus(res.data);
 				if (res.data.needsPhoneAuth2) {
 					let prompt = window.prompt("Enter phone auth code");
-					axios.post("http://192.168.11.3:3333/phoneAuth2", {
+					axios.post(`http://${process.env.IP}/phoneAuth2`, {
 						phoneAuth2: prompt,
 					});
 				}
