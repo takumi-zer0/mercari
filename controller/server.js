@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 require("dotenv").config();
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || 80;
 const ip = process.env.IP || "localhost";
 const redis = require("redis");
 const bodyParser = require("body-parser");
