@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 global.merList = [];
 
 async function initRedisPubSub() {
-	const client = redis.createClient({ url: `redis://${ip}:6379` });
+	const client = redis.createClient({ url: `redis://192.168.11.2:6379` });
 
 	global.subscriber = client.duplicate();
 	global.publisher = client.duplicate();
