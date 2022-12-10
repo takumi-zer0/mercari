@@ -24,7 +24,7 @@ services:
     build: ./controller
     depends_on:
       - redis
-     ports:
+    ports:
       - "80:80"
     networks:
       - back
